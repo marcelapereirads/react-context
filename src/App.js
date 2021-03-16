@@ -1,25 +1,53 @@
-import logo from './logo.svg';
+import React, { useContext } from 'react';
+import { Box, Paper, Button } from '@material-ui/core';
+
+import { text } from './constants.js';
 import './App.css';
 
-function App() {
+const ThemeContext = React.createContext();
+const ButtonStyleContext = React.createContext('contained');
+
+const App = () => (
+  <ThemeContext.Provider value="secondary">
+    <Container />
+  </ThemeContext.Provider>
+);
+
+const Container = () => (
+  <Box m={5}>
+    <Paper elevation={3}>
+      <Box p={3}>
+        {text}
+        <Box className="buttons__container">
+          <ThemedButton>
+            Agree
+          </ThemedButton>
+          <ButtonStyleContext.Provider value="outlined">
+            <ThemedButton>
+              Disagree
+            </ThemedButton>
+          </ButtonStyleContext.Provider>
+        </Box>
+      </Box>
+    </Paper>
+  </Box>
+);
+
+const ThemedButton = ({ children }) => {
+  const buttonColor = useContext(ThemeContext);
+  const buttonStyle = useContext(ButtonStyleContext);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Box className="button">
+      <Button variant={buttonStyle} color={buttonColor}>
+        {children}
+      </Button>
+    </Box>
+  )
+};
+
+ThemedButton.defaultProps = {
+  variant: 'contained'
 }
 
 export default App;
